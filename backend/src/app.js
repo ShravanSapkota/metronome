@@ -1,6 +1,6 @@
 import express from "express";
 import cors from "cors";
-import songRoutes from "./routes/songRoutes";
+import songRoutes from "./routes/songRoutes.js";
 
 const app=express();
 
@@ -11,6 +11,6 @@ app.get("/",(req,res)=>{
     res.send("Metronome API is running");
 })
 
-app.use("/songs",songRoutes)
+app.use("/api/songs",songRoutes)
 
 export default app;

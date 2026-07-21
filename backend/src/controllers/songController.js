@@ -4,3 +4,5 @@ const getAllSongs=(req,res)=>{
         message:"get all songs controller working"
     });
 }
+
+export {getAllSongs};
