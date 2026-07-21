@@ -1,6 +1,6 @@
 import pool  from "../config/db";
 
-const getAllSongs=(req,res)=>{
+const getAllSongs=async (req,res)=>{
     try{
     const [rows]=await pool.query("SELECT * FROM songs");
     res.status(200).json({
