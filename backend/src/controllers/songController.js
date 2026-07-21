@@ -20,7 +20,7 @@ const getAllSongs = async (req, res) => {
 
 const searchSong = async (req, res) => {
     try {
-        const query = req.query
+        const {query} = req.query
         if (!query || query == "") {
             return res.status(400).json({
                 success: false,
@@ -38,7 +38,7 @@ const searchSong = async (req, res) => {
         res.status(200).json({
             success:true,
             message:"search results successfull",
-            songs
+            songs:rows
         })
 
     }
