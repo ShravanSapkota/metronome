@@ -2,7 +2,7 @@ import pool  from "../config/db.js";
 
 const getAllSongs=async (req,res)=>{
     try{
-    const [rows]=await pool.query("SELECT * FROM songs");
+    const [rows]=await pool.query("SELECT * FROM songs LIMIT 20");
     res.status(200).json({
         success:true,
         message:"get all songs controller working",
