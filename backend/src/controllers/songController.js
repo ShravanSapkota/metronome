@@ -95,7 +95,7 @@ const searchSong = async (req, res) => {
 const getSongById= async (req,res)=>{
     try{
         const {id}=req.params;
-        if(Number.isNaN(id)|| id<1){
+        if(isNaN(id)|| id<1){
             return res.status(500).json({
                 success:false,
                 message: "provide a valid song id"
