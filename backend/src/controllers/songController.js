@@ -2,11 +2,32 @@ import pool from "../config/db.js";
 
 const getAllSongs = async (req, res) => {
     try {
-        const [rows] = await pool.query("SELECT * FROM songs LIMIT 20");
+        let { page = 1, limit = 20 } = req.query
+        page = Number(page)
+        limit = Number(limit)
+
+        if ((Number.isNaN(page) || Number.isNaN(limit)) || (page < 1 || limit < 1)) {
+            return res.status(500).json({
+                success: false,
+                message: "please provide a valid page and limit"
+            })
+        }
+
+        const offset=(page-1)*limit;
+
+        const [songs] = await pool.query("SELECT * FROM songs ORDER BY popularity DESC LIMIT ? OFFSET ?",[limit,offset]);
+
+
+        const [totalrows]=await pool.query("SELECT COUNT(*) AS total FROM songs")
+
+        const total = totalrows[0].total
+        const totalPages=Math.ceil(total/limit)
+
         res.status(200).json({
             success: true,
-            message: "get all songs controller working",
-            songs: rows
+            total,
+            totalPages,
+            songs
         });
     }
     catch (error) {
@@ -70,4 +91,36 @@ const searchSong = async (req, res) => {
     }
 }
 
-export { getAllSongs, searchSong };
+
+const getSongById= async (req,res)=>{
+    try{
+        const {id}=req.params;
+        if(Number.isNaN(id)|| id<1){
+            return res.status(500).json({
+                success:false,
+                message: "provide a valid song id"
+            })
+        }
+        const [rows]=await pool.query("SELECT  * FROM songs where id=?",[Number(id)])
+        if(rows.length==0){
+            return res.status(500).json({
+                success:false,
+                message: "song of the id not found"
+            })
+        }
+        res.status(200).json({
+            success:true,
+            song: rows[0]
+        })
+    }
+    catch(error){
+        console.log(error)
+        return res.status(500).json({
+            success:false,
+            message: "Internal server error"
+        })
+
+    }
+}
+
+export { getAllSongs, searchSong, getSongById};
